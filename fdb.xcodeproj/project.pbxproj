@@ -1,0 +1,366 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9626DF7224CBF11E00A6BF02 /* CalendarTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9626DF7124CBF11E00A6BF02 /* CalendarTable.swift */; };
+		964BF3A924CB244A0093087E /* FeistyDBShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964BF3A824CB244A0093087E /* FeistyDBShell.swift */; };
+		964BF3AC24CB25D10093087E /* FeistyDB in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AB24CB25D10093087E /* FeistyDB */; };
+		964BF3AE24CB25D10093087E /* CSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AD24CB25D10093087E /* CSQLite */; };
+		964BF3B024CB25D10093087E /* FeistyExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AF24CB25D10093087E /* FeistyExtensions */; };
+		964BF3B224CB26220093087E /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = 964BF3B124CB26220093087E /* shell.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		964BF39924CB23750093087E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9619F3D124CB4C8000ED527E /* FeistyDB */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FeistyDB; path = ../../frameworks/FeistyDB; sourceTree = "<group>"; };
+		9626DF7124CBF11E00A6BF02 /* CalendarTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarTable.swift; sourceTree = "<group>"; };
+		964BF39B24CB23750093087E /* fdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fdb; sourceTree = BUILT_PRODUCTS_DIR; };
+		964BF3A724CB244A0093087E /* fdb-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fdb-Bridging-Header.h"; sourceTree = "<group>"; };
+		964BF3A824CB244A0093087E /* FeistyDBShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeistyDBShell.swift; sourceTree = "<group>"; };
+		964BF3B124CB26220093087E /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shell.c; path = "../../../../OpenSource/sqlite-amalgamation-3320300/shell.c"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		964BF39824CB23750093087E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				964BF3AE24CB25D10093087E /* CSQLite in Frameworks */,
+				964BF3AC24CB25D10093087E /* FeistyDB in Frameworks */,
+				964BF3B024CB25D10093087E /* FeistyExtensions in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		964BF39224CB23750093087E = {
+			isa = PBXGroup;
+			children = (
+				9619F3D124CB4C8000ED527E /* FeistyDB */,
+				964BF39D24CB23750093087E /* fdb */,
+				964BF39C24CB23750093087E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		964BF39C24CB23750093087E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				964BF39B24CB23750093087E /* fdb */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		964BF39D24CB23750093087E /* fdb */ = {
+			isa = PBXGroup;
+			children = (
+				9626DF7124CBF11E00A6BF02 /* CalendarTable.swift */,
+				964BF3B124CB26220093087E /* shell.c */,
+				964BF3A824CB244A0093087E /* FeistyDBShell.swift */,
+				964BF3A724CB244A0093087E /* fdb-Bridging-Header.h */,
+			);
+			path = fdb;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		964BF39A24CB23750093087E /* fdb */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 964BF3A224CB23750093087E /* Build configuration list for PBXNativeTarget "fdb" */;
+			buildPhases = (
+				964BF39724CB23750093087E /* Sources */,
+				964BF39824CB23750093087E /* Frameworks */,
+				964BF39924CB23750093087E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = fdb;
+			packageProductDependencies = (
+				964BF3AB24CB25D10093087E /* FeistyDB */,
+				964BF3AD24CB25D10093087E /* CSQLite */,
+				964BF3AF24CB25D10093087E /* FeistyExtensions */,
+			);
+			productName = fdb;
+			productReference = 964BF39B24CB23750093087E /* fdb */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		964BF39324CB23750093087E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				TargetAttributes = {
+					964BF39A24CB23750093087E = {
+						CreatedOnToolsVersion = 12.0;
+						LastSwiftMigration = 1200;
+					};
+				};
+			};
+			buildConfigurationList = 964BF39624CB23750093087E /* Build configuration list for PBXProject "fdb" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 964BF39224CB23750093087E;
+			packageReferences = (
+				964BF3AA24CB25D10093087E /* XCRemoteSwiftPackageReference "FeistyDB" */,
+			);
+			productRefGroup = 964BF39C24CB23750093087E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				964BF39A24CB23750093087E /* fdb */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		964BF39724CB23750093087E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				964BF3B224CB26220093087E /* shell.c in Sources */,
+				9626DF7224CBF11E00A6BF02 /* CalendarTable.swift in Sources */,
+				964BF3A924CB244A0093087E /* FeistyDBShell.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		964BF3A024CB23750093087E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-DSQLITE_OMIT_DECLTYPE=1",
+					"-DSQLITE_OMIT_PROGRESS_CALLBACK=1",
+					"-DFEISTY_DB_EXTENSION=1",
+				);
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		964BF3A124CB23750093087E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_CFLAGS = (
+					"-DSQLITE_OMIT_DECLTYPE=1",
+					"-DSQLITE_OMIT_PROGRESS_CALLBACK=1",
+					"-DFEISTY_DB_EXTENSION=1",
+				);
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		964BF3A324CB23750093087E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8S7Y6KVRU5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "fdb/fdb-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		964BF3A424CB23750093087E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8S7Y6KVRU5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "fdb/fdb-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		964BF39624CB23750093087E /* Build configuration list for PBXProject "fdb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				964BF3A024CB23750093087E /* Debug */,
+				964BF3A124CB23750093087E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		964BF3A224CB23750093087E /* Build configuration list for PBXNativeTarget "fdb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				964BF3A324CB23750093087E /* Debug */,
+				964BF3A424CB23750093087E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		964BF3AA24CB25D10093087E /* XCRemoteSwiftPackageReference "FeistyDB" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/wildthink/FeistyDB";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		964BF3AB24CB25D10093087E /* FeistyDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 964BF3AA24CB25D10093087E /* XCRemoteSwiftPackageReference "FeistyDB" */;
+			productName = FeistyDB;
+		};
+		964BF3AD24CB25D10093087E /* CSQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 964BF3AA24CB25D10093087E /* XCRemoteSwiftPackageReference "FeistyDB" */;
+			productName = CSQLite;
+		};
+		964BF3AF24CB25D10093087E /* FeistyExtensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 964BF3AA24CB25D10093087E /* XCRemoteSwiftPackageReference "FeistyDB" */;
+			productName = FeistyExtensions;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 964BF39324CB23750093087E /* Project object */;
+}

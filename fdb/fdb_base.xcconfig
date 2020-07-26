@@ -1,0 +1,8 @@
+CLANG_ENABLE_MODULES = YES
+CODE_SIGN_STYLE = Automatic
+DEVELOPMENT_TEAM = 8S7Y6KVRU5
+ENABLE_HARDENED_RUNTIME = YES
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks @loader_path/../Frameworks
+PRODUCT_NAME = $(TARGET_NAME)
+SWIFT_OBJC_BRIDGING_HEADER = fdb/fdb-Bridging-Header.h
+SWIFT_VERSION = 5.0
