@@ -13,7 +13,7 @@
 		964BF3AE24CB25D10093087E /* CSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AD24CB25D10093087E /* CSQLite */; };
 		964BF3B024CB25D10093087E /* FeistyExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AF24CB25D10093087E /* FeistyExtensions */; };
 		96908B4C24EA35B700F375E8 /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = 96908B4B24EA35B600F375E8 /* shell.c */; };
-		96908B4E24EA628000F375E8 /* CalendarVTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96908B4D24EA628000F375E8 /* CalendarVTable.swift */; };
+		96908B4E24EA628000F375E8 /* SeriesVTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96908B4D24EA628000F375E8 /* SeriesVTable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,7 +35,7 @@
 		964BF3A724CB244A0093087E /* fdb-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fdb-Bridging-Header.h"; sourceTree = "<group>"; };
 		964BF3A824CB244A0093087E /* FeistyDBShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeistyDBShell.swift; sourceTree = "<group>"; };
 		96908B4B24EA35B600F375E8 /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shell.c; path = sqlite/shell.c; sourceTree = SOURCE_ROOT; };
-		96908B4D24EA628000F375E8 /* CalendarVTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVTable.swift; sourceTree = "<group>"; };
+		96908B4D24EA628000F375E8 /* SeriesVTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesVTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +76,7 @@
 				9626DF7124CBF11E00A6BF02 /* CalendarTable.swift */,
 				964BF3A824CB244A0093087E /* FeistyDBShell.swift */,
 				964BF3A724CB244A0093087E /* fdb-Bridging-Header.h */,
-				96908B4D24EA628000F375E8 /* CalendarVTable.swift */,
+				96908B4D24EA628000F375E8 /* SeriesVTable.swift */,
 			);
 			path = fdb;
 			sourceTree = "<group>";
@@ -149,7 +149,7 @@
 				96908B4C24EA35B700F375E8 /* shell.c in Sources */,
 				9626DF7224CBF11E00A6BF02 /* CalendarTable.swift in Sources */,
 				964BF3A924CB244A0093087E /* FeistyDBShell.swift in Sources */,
-				96908B4E24EA628000F375E8 /* CalendarVTable.swift in Sources */,
+				96908B4E24EA628000F375E8 /* SeriesVTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
