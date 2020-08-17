@@ -7,5 +7,6 @@ xcuserdata/
 
 /docs/
 
-/sqlite-src-*.zip
-/sqlite-src-*/*
+/sqlite-*.zip
+/sqlite-*/*
+

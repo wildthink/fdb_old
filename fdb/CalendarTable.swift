@@ -10,7 +10,7 @@ import CSQLite
 import FeistyDB
 import FeistyExtensions
 
-final class CalendarModule: VirtualTableModule {
+final class CalendarModule: EponymousVirtualTableModule {
    
     var start: Date = Date() // now
     var end: Date = .distantFuture
@@ -21,6 +21,11 @@ final class CalendarModule: VirtualTableModule {
 
     func destroy() throws {
     }
+
+    convenience init(database: Database, arguments: [String]) throws {
+        try self.init(database: database, arguments: arguments, create: false)
+    }
+    
 
     required init(database: Database, arguments: [String], create: Bool) throws {
 
@@ -42,16 +47,102 @@ final class CalendarModule: VirtualTableModule {
 
     }
     
-    var declaration: String {
-        "CREATE TABLE x(date, weekday, day, week, month, year, start, stop, step)"
-    }
+//    open var columns: [Column] = []
+    // "CREATE TABLE x(date, weekday, day, week, month, year, start HIDDEN, stop HIDDEN, step HIDDEN)"
+    //    }
+
+    lazy var columns: [Column] = {
+        var cols:[Column] = [
+            .column("date", .text),
+            .column("weekday", .int),
+            .column("day", .int),
+            .column("week", .int),
+            .column("month", .int),
+            .column("year", .int),
+            .hidden("start", .text),
+            .hidden("stop", .text),
+            .hidden("step", .text)
+        ]
+        for ndx in 0..<cols.count {
+            cols[ndx].ndx = ndx
+        }
+        return cols
+    }()
+
+    lazy public var declaration: String = {
+        var str: String = "CREATE TABLE x("
+        for col in columns {
+            Swift.print("\t\(col.declaration)", separator: "", terminator: "", to: &str)
+            if col != columns.last {
+                Swift.print(",\n", separator: "", terminator: "", to: &str)
+            }
+        }
+        Swift.print("\n)", separator: "", terminator: "", to: &str)
+        return str
+    }()
+
+//    var declaration: String {
+//        "CREATE TABLE x(date, weekday, day, week, month, year, start HIDDEN, stop HIDDEN, step HIDDEN)"
+//    }
     
     var options: Database.VirtualTableModuleOptions {
         [.innocuous]
     }
     
     func bestIndex(_ indexInfo: inout sqlite3_index_info) -> VirtualTableModuleBestIndexResult {
-        .ok
+        // Inputs
+        let constraintCount = Int(indexInfo.nConstraint)
+        let constraints = UnsafeBufferPointer<sqlite3_index_constraint>(start: indexInfo.aConstraint, count: constraintCount)
+        
+        // Outputs
+        let constraintUsage = UnsafeMutableBufferPointer<sqlite3_index_constraint_usage>(start: indexInfo.aConstraintUsage, count: constraintCount)
+        
+//        var queryPlan = QueryPlanOption()
+//        _ = QueryPlanOption.all // force Info[] population
+        
+        var argv: [VTabConstraint] = []
+        
+        var count = 0
+        for constraint in constraints where constraint.usable != 0 {
+            let col = constraint.iColumn
+            let arg = VTabConstraint(col: Int(col), ndx: count, op: constraint.op)
+            argv.append(arg)
+            count += 1
+//            let opt = QueryPlanOption(index: ndx)
+//            //            Swift.print("plan union", opt.info)
+//            queryPlan = queryPlan.union(opt)
+        }
+        Swift.print(#line, argv)
+        for arg in argv {
+            constraintUsage[arg.ndx].argvIndex = Int32(arg.ndx + 1)
+        }
+//        for (ndx, col) in queryPlan.elements().enumerated() {
+//            //            Swift.print("usage", ndx, col.info)
+//            constraintUsage[col.index - 1].argvIndex = Int32(ndx + 1)
+//        }
+        //        Swift.print (#line, queryPlan)
+        
+//        if queryPlan.contains(.start) && queryPlan.contains(.stop) {
+//            // Lower the cost if we also have step
+//            indexInfo.estimatedCost = 2  - (queryPlan.contains(.step) ? 1 : 0)
+//            indexInfo.estimatedRows = 1000
+//
+//            // ORDER BY
+//            if indexInfo.nOrderBy == 1 {
+//                if indexInfo.aOrderBy[0].desc == 1 {
+//                    queryPlan = queryPlan.union(.descending)
+//                }
+                indexInfo.orderByConsumed = 1
+//            }
+//        }
+//        else {
+            indexInfo.estimatedRows = 2147483647
+//        }
+        // Passed to filter()
+        //        indexInfo.idxStr =
+//        indexInfo.idxNum = queryPlan.rawValue
+        
+        return .ok
     }
     
     func openCursor() -> VirtualTableCursor {
@@ -107,7 +198,7 @@ extension CalendarModule {
         }
 
         func column(_ index: Int32) -> DatabaseValue {
-            // "CREATE TABLE x(date, weekday, day, week, month, year)"
+            // "CREATE TABLE x(date, weekday, day, week, month, year, start, stop, step)"
 
             guard let date = current else { return .null }
             switch index {
@@ -157,11 +248,17 @@ extension CalendarModule {
         }
         
         var eof: Bool {
-            // HARD LIMIT of 1000 year span
-            if let date = current, date > end || _rowid > 365_000 {
+            // HARD LIMIT of 1000 year span 365_000
+            if let date = current, date > end || _rowid > 365_00 {
                 return true
             }
             return false
         }
     }
+}
+
+struct VTabConstraint {
+    let col: Int
+    let ndx: Int
+    let op: UTF8Char
 }

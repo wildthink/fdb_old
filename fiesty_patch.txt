@@ -1,0 +1,4 @@
+#ifdef FEISTY_DB_EXTENSION
+      extern void feisty_init(void* db);
+      feisty_init(p->db);
+#endif

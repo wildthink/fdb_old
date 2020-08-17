@@ -12,7 +12,8 @@
 		964BF3AC24CB25D10093087E /* FeistyDB in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AB24CB25D10093087E /* FeistyDB */; };
 		964BF3AE24CB25D10093087E /* CSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AD24CB25D10093087E /* CSQLite */; };
 		964BF3B024CB25D10093087E /* FeistyExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AF24CB25D10093087E /* FeistyExtensions */; };
-		964BF3B224CB26220093087E /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = 964BF3B124CB26220093087E /* shell.c */; };
+		96908B4C24EA35B700F375E8 /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = 96908B4B24EA35B600F375E8 /* shell.c */; };
+		96908B4E24EA628000F375E8 /* CalendarVTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96908B4D24EA628000F375E8 /* CalendarVTable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,7 +34,8 @@
 		964BF39B24CB23750093087E /* fdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fdb; sourceTree = BUILT_PRODUCTS_DIR; };
 		964BF3A724CB244A0093087E /* fdb-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fdb-Bridging-Header.h"; sourceTree = "<group>"; };
 		964BF3A824CB244A0093087E /* FeistyDBShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeistyDBShell.swift; sourceTree = "<group>"; };
-		964BF3B124CB26220093087E /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shell.c; path = "../../../../OpenSource/sqlite-amalgamation-3320300/shell.c"; sourceTree = "<group>"; };
+		96908B4B24EA35B600F375E8 /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shell.c; path = sqlite/shell.c; sourceTree = SOURCE_ROOT; };
+		96908B4D24EA628000F375E8 /* CalendarVTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,10 +72,11 @@
 		964BF39D24CB23750093087E /* fdb */ = {
 			isa = PBXGroup;
 			children = (
+				96908B4B24EA35B600F375E8 /* shell.c */,
 				9626DF7124CBF11E00A6BF02 /* CalendarTable.swift */,
-				964BF3B124CB26220093087E /* shell.c */,
 				964BF3A824CB244A0093087E /* FeistyDBShell.swift */,
 				964BF3A724CB244A0093087E /* fdb-Bridging-Header.h */,
+				96908B4D24EA628000F375E8 /* CalendarVTable.swift */,
 			);
 			path = fdb;
 			sourceTree = "<group>";
@@ -143,9 +146,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				964BF3B224CB26220093087E /* shell.c in Sources */,
+				96908B4C24EA35B700F375E8 /* shell.c in Sources */,
 				9626DF7224CBF11E00A6BF02 /* CalendarTable.swift in Sources */,
 				964BF3A924CB244A0093087E /* FeistyDBShell.swift in Sources */,
+				96908B4E24EA628000F375E8 /* CalendarVTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,12 +284,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8S7Y6KVRU5;
 				ENABLE_HARDENED_RUNTIME = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/include";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "fdb/fdb-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -305,6 +311,7 @@
 					"@loader_path/../Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "fdb/fdb-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
