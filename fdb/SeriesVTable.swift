@@ -10,8 +10,13 @@ import CSQLite
 import FeistyDB
 
 
-final class SeriesModule: EponymousVirtualTableModule {
+//final class SeriesModule: EponymousVirtualTableModule {
+final class SeriesModule: VirtualTableModule {
     
+    init(database: Database, arguments: [String], create: Bool) throws {
+        Swift.print (#function, arguments)
+    }
+
     var filter_info: FilterInfo = FilterInfo()
     
     enum Column: Int32 {
@@ -34,6 +39,7 @@ final class SeriesModule: EponymousVirtualTableModule {
     }
     
     required init(database: Database, arguments: [String]) {
+        Swift.print (#function, arguments)
     }
 
     var declaration: String {

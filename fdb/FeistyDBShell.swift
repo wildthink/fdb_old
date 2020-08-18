@@ -16,7 +16,8 @@ func fiesty_init(_ db: SQLiteDatabaseConnection) {
     let db = Database(rawSQLiteDatabase: db)
     do {
         try db.addModule("calendar", type: CalendarModule.self)
-        try db.addModule("series", type: SeriesModule.self)
+        try db.addModule("cal", type: CalendarModule.self, eponymous: true)
+        try db.addModule("series", type: SeriesModule.self, eponymous: true)
         
         let date_fmt = DateFormatter()
         date_fmt.dateFormat = "yyyy-MM-dd"

@@ -10,7 +10,7 @@ import CSQLite
 import FeistyDB
 import FeistyExtensions
 
-final class CalendarModule: EponymousVirtualTableModule {
+final class CalendarModule: VirtualTableModule {
     
     var filter_info: FilterInfo = FilterInfo()
     
@@ -46,9 +46,8 @@ final class CalendarModule: EponymousVirtualTableModule {
         try self.init(database: database, arguments: arguments, create: false)
     }
     
-    
     required init(database: Database, arguments: [String], create: Bool) throws {
-        
+        Swift.print (#function, arguments)
         date_fmt = DateFormatter()
         date_fmt.dateFormat = "yyyy-MM-dd"
     }
