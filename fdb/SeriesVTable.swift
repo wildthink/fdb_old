@@ -10,7 +10,13 @@ import CSQLite
 import FeistyDB
 
 
-//final class SeriesModule: EponymousVirtualTableModule {
+// Extenstion to interface w/ SeriesModule
+extension FilterInfo {
+    func contains(_ col: SeriesModule.Column) -> Bool {
+        argv.contains(where: { $0.col_ndx == col.rawValue} )
+    }
+}
+
 final class SeriesModule: VirtualTableModule {
     
     init(database: Database, arguments: [String], create: Bool) throws {
@@ -19,23 +25,8 @@ final class SeriesModule: VirtualTableModule {
 
     var filter_info: FilterInfo = FilterInfo()
     
-    enum Column: Int32 {
+    enum Column: Int32, ColumnIndex, CaseIterable {
         case value, start, stop, step
-        var is_hidden: Bool { return self != .value }
-    }
-    struct FilterInfo {
-        var argv: [FilterArg] = []
-        var isDescending: Bool = false
-        
-        func contains(_ col: Column) -> Bool {
-            argv.contains(where: { $0.col_ndx == col} )
-        }
-    }
-    
-    struct FilterArg {
-        var arg_ndx: Int32
-        var col_ndx: Column
-        var op: UInt8
     }
     
     required init(database: Database, arguments: [String]) {
@@ -66,10 +57,10 @@ final class SeriesModule: VirtualTableModule {
             let constraint = constraints[i]
             guard constraint.usable != 0 else { continue }
             guard let cndx = Column(rawValue: constraint.iColumn) else { return .constraint }
-            guard cndx.is_hidden else { continue }
-            guard constraint.op == SQLITE_INDEX_CONSTRAINT_EQ else { return .constraint }
+//            guard cndx.is_hidden else { continue }
+//            guard constraint.op == SQLITE_INDEX_CONSTRAINT_EQ else { return .constraint }
 
-            let farg = FilterArg(arg_ndx: argc - 1, col_ndx: cndx, op: constraint.op)
+            let farg = FilterArg(arg: argc - 1, col: cndx, op: constraint.op)
             filter_info.argv.append(farg)
             indexInfo.aConstraintUsage[i].argvIndex = argc
             indexInfo.aConstraintUsage[i].omit = 1
@@ -143,9 +134,14 @@ extension SeriesModule {
             _max = 0xffffffff
             _step = 1
             
+            let ds =
+                module.filter_info.descibe(with: Column.allCases.map {String(describing:$0)},
+                                           values: arguments)
+            Swift.print(ds)
+            
             for farg in module.filter_info.argv {
                 //                Swift.print(farg)
-                switch (farg.col_ndx, arguments[Int(farg.arg_ndx)]) {
+                switch (Column(rawValue: farg.col_ndx), arguments[Int(farg.arg_ndx)]) {
                     case (.start, let DatabaseValue.integer(argv)): _min  = argv
                     case (.stop,  let DatabaseValue.integer(argv)): _max  = argv
                     case (.step,  let DatabaseValue.integer(argv)): _step = argv
