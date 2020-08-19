@@ -14,17 +14,19 @@ public protocol ColumnIndex {
 }
 
 public struct FilterInfo {
+    public var key: Int32 = 0
     public var argv: [FilterArg] = []
+    public var columnsUsed: UInt64 = 0
     public var isDescending: Bool = false
     
     public func contains(_ col: Int32) -> Bool {
         argv.contains(where: { $0.col_ndx == col} )
     }
     
-    public func descibe(with cols: [String], values: [Any] = []) -> String {
+    public func describe(with cols: [String], values: [Any] = []) -> String {
         var str = "Filter ("
         for arg in argv {
-            Swift.print(arg.descibe(with: cols, values: values),
+            Swift.print(arg.describe(with: cols, values: values),
                         separator: ",", terminator: " ", to: &str)
         }
         Swift.print(")", separator: "", terminator: "\n", to: &str)
@@ -44,10 +46,14 @@ public struct FilterArg: CustomStringConvertible {
         self.op = op
     }
     
+    init(arg: Int32, col: ColumnIndex, op: UInt8) {
+        self.init(arg: arg, col: col.rawValue, op: op)
+    }
+
     public var description: String  { "col[\(col_ndx)] \(op_str) argv[\(arg_ndx)])" }
     public var op_str: String       { FilterArg.op_str(self.op) }
     
-    public func descibe(with cols: [String], values: [Any] = []) -> String {
+    public func describe(with cols: [String], values: [Any] = []) -> String {
         let ndx = Int(col_ndx)
         let col = (ndx < cols.count ? cols[ndx] : "col[\(ndx)]")
         let a_ndx = Int(arg_ndx)
@@ -79,9 +85,39 @@ public struct FilterArg: CustomStringConvertible {
     }
 }
 
-public extension FilterArg {
-    init(arg: Int32, col: ColumnIndex, op: UInt8) {
-        self.init(arg: arg, col: col.rawValue, op: op)
+public extension FilterInfo {
+    
+    init? (_ indexInfo: inout sqlite3_index_info) {
+        
+        // Inputs
+        let constraintCount = Int(indexInfo.nConstraint)
+        let constraints = UnsafeBufferPointer<sqlite3_index_constraint>(start: indexInfo.aConstraint, count: constraintCount)
+                
+        var argc: Int32 = 1
+        
+        for i in 0 ..< constraintCount {
+            let constraint = constraints[i]
+            guard constraint.usable != 0 else { continue }
+            let farg = FilterArg(arg: argc - 1, col: constraint.iColumn, op: constraint.op)
+            argv.append(farg)
+            // Outputs
+            indexInfo.aConstraintUsage[i].argvIndex = argc
+            indexInfo.aConstraintUsage[i].omit = 1
+            argc += 1
+        }
+        
+        let orderByCount = Int(indexInfo.nOrderBy)
+        let orderBy = UnsafeBufferPointer<sqlite3_index_orderby>(start: indexInfo.aOrderBy, count: orderByCount)
+        
+        if orderByCount == 1 {
+            if orderBy[0].desc == 1 {
+                isDescending = true
+            }
+            // Output
+            indexInfo.orderByConsumed = 1
+        }
+        self.columnsUsed = indexInfo.colUsed
     }
+
 }
 
