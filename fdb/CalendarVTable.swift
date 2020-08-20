@@ -10,12 +10,12 @@ import CSQLite
 import FeistyDB
 import FeistyExtensions
 
-final class CalendarModule: BaseTableModule {
+final public class CalendarModule: BaseTableModule {
     
     enum Column: Int32, ColumnIndex {
         case date, weekday, day, week, month, year, start, stop, step
     }
-    override var declaration: String {
+    public override var declaration: String {
         "CREATE TABLE x(date, weekday, day, week, month, year, start HIDDEN, stop HIDDEN, step HIDDEN)"
     }
 
@@ -35,7 +35,7 @@ final class CalendarModule: BaseTableModule {
         try super.init(database: database, arguments: arguments, create: false)
     }
     
-    override func bestIndex(_ indexInfo: inout sqlite3_index_info) -> VirtualTableModuleBestIndexResult {
+    public override func bestIndex(_ indexInfo: inout sqlite3_index_info) -> VirtualTableModuleBestIndexResult {
         
         guard var info = FilterInfo(&indexInfo) else { return .constraint }
         if info.contains(.start) && info.contains(.stop) {
@@ -56,7 +56,7 @@ final class CalendarModule: BaseTableModule {
         return .ok
     }
 
-    override func openCursor() -> VirtualTableCursor {
+    public override func openCursor() -> VirtualTableCursor {
         return Cursor(self, filter: filters.last)
     }
 }

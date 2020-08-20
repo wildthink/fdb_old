@@ -7,15 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9626DF7224CBF11E00A6BF02 /* CalendarTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9626DF7124CBF11E00A6BF02 /* CalendarTable.swift */; };
 		964BF3A924CB244A0093087E /* FeistyDBShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964BF3A824CB244A0093087E /* FeistyDBShell.swift */; };
 		964BF3AC24CB25D10093087E /* FeistyDB in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AB24CB25D10093087E /* FeistyDB */; };
 		964BF3AE24CB25D10093087E /* CSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AD24CB25D10093087E /* CSQLite */; };
 		964BF3B024CB25D10093087E /* FeistyExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 964BF3AF24CB25D10093087E /* FeistyExtensions */; };
 		96908B4C24EA35B700F375E8 /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = 96908B4B24EA35B600F375E8 /* shell.c */; };
-		96908B4E24EA628000F375E8 /* SeriesVTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96908B4D24EA628000F375E8 /* SeriesVTable.swift */; };
-		969B988D24EDA4220027FF5F /* FeistyVtabExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969B988C24EDA4220027FF5F /* FeistyVtabExtensions.swift */; };
-		969B988F24EE2B9D0027FF5F /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969B988E24EE2B9D0027FF5F /* FoundationExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,14 +28,9 @@
 
 /* Begin PBXFileReference section */
 		9619F3D124CB4C8000ED527E /* FeistyDB */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FeistyDB; path = ../../frameworks/FeistyDB; sourceTree = "<group>"; };
-		9626DF7124CBF11E00A6BF02 /* CalendarTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarTable.swift; sourceTree = "<group>"; };
 		964BF39B24CB23750093087E /* fdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fdb; sourceTree = BUILT_PRODUCTS_DIR; };
-		964BF3A724CB244A0093087E /* fdb-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fdb-Bridging-Header.h"; sourceTree = "<group>"; };
 		964BF3A824CB244A0093087E /* FeistyDBShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeistyDBShell.swift; sourceTree = "<group>"; };
 		96908B4B24EA35B600F375E8 /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shell.c; path = sqlite/shell.c; sourceTree = SOURCE_ROOT; };
-		96908B4D24EA628000F375E8 /* SeriesVTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesVTable.swift; sourceTree = "<group>"; };
-		969B988C24EDA4220027FF5F /* FeistyVtabExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeistyVtabExtensions.swift; sourceTree = "<group>"; };
-		969B988E24EE2B9D0027FF5F /* FoundationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,12 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				96908B4B24EA35B600F375E8 /* shell.c */,
-				9626DF7124CBF11E00A6BF02 /* CalendarTable.swift */,
 				964BF3A824CB244A0093087E /* FeistyDBShell.swift */,
-				964BF3A724CB244A0093087E /* fdb-Bridging-Header.h */,
-				96908B4D24EA628000F375E8 /* SeriesVTable.swift */,
-				969B988C24EDA4220027FF5F /* FeistyVtabExtensions.swift */,
-				969B988E24EE2B9D0027FF5F /* FoundationExtensions.swift */,
 			);
 			path = fdb;
 			sourceTree = "<group>";
@@ -152,12 +138,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				969B988D24EDA4220027FF5F /* FeistyVtabExtensions.swift in Sources */,
 				96908B4C24EA35B700F375E8 /* shell.c in Sources */,
-				969B988F24EE2B9D0027FF5F /* FoundationExtensions.swift in Sources */,
-				9626DF7224CBF11E00A6BF02 /* CalendarTable.swift in Sources */,
 				964BF3A924CB244A0093087E /* FeistyDBShell.swift in Sources */,
-				96908B4E24EA628000F375E8 /* SeriesVTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,19 +7,19 @@
 import Foundation
 import CSQLite
 import FeistyDB
+import FeistyExtensions
 
-
-final class SeriesModule: BaseTableModule {
+public final class SeriesModule: BaseTableModule {
 
     enum Column: Int32, ColumnIndex, CaseIterable {
         case value, start, stop, step
     }
 
-    override var declaration: String {
+    public override var declaration: String {
         "CREATE TABLE x(value,start hidden,stop hidden,step hidden)"
     }
     
-    override func bestIndex(_ indexInfo: inout sqlite3_index_info) -> VirtualTableModuleBestIndexResult {
+    public override func bestIndex(_ indexInfo: inout sqlite3_index_info) -> VirtualTableModuleBestIndexResult {
         
         guard var info = FilterInfo(&indexInfo) else { return .constraint }
         if info.contains(.start) && info.contains(.stop) {
@@ -40,7 +40,7 @@ final class SeriesModule: BaseTableModule {
         return .ok
     }
     
-    override func openCursor() -> VirtualTableCursor {
+    public override func openCursor() -> VirtualTableCursor {
         return Cursor(self, filter: filters.last)
     }
 }
