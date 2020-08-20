@@ -27,9 +27,15 @@ final class SeriesModule: BaseTableModule {
             indexInfo.estimatedRows = 1000
         }
         else {
-            indexInfo.estimatedRows = 2147483647
+            indexInfo.estimatedRows = Int64.max // 2147483647
         }
         
+        if let arg = info.argv.first(where: { $0.col_ndx == Column.value.rawValue } ),
+           arg.op_str == "=" {
+            indexInfo.estimatedRows = 1
+            indexInfo.idxFlags = SQLITE_INDEX_SCAN_UNIQUE
+        }
+
         indexInfo.idxNum = add(&info)
         return .ok
     }
@@ -90,9 +96,22 @@ extension SeriesModule {
             
             for farg in filterInfo.argv.reversed() {
                 switch (Column(rawValue: farg.col_ndx), arguments[Int(farg.arg_ndx)]) {
-                    case (.start, let DatabaseValue.integer(argv)): _min  = argv
-                    case (.stop,  let DatabaseValue.integer(argv)): _max  = argv
-                    case (.step,  let DatabaseValue.integer(argv)): _step = argv
+                    case (.start, let DatabaseValue.integer(arg)): _min  = arg
+                    case (.stop,  let DatabaseValue.integer(arg)): _max  = arg
+                    case (.step,  let DatabaseValue.integer(arg)): _step = arg
+                    case (.value, let DatabaseValue.integer(arg)):
+                        switch farg.op_str {
+                            case "=":
+                                _min = arg
+                                _max = arg
+                                _value = arg
+                            case "<", "<=":
+                                _max = arg
+                            case ">", ">=":
+                                _min = arg
+                            default:
+                                break
+                        }
                     default:
                         break
                 }

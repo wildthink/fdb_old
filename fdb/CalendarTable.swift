@@ -46,6 +46,12 @@ final class CalendarModule: BaseTableModule {
             indexInfo.estimatedRows = 2147483647
         }
         
+        if let arg = info.argv.first(where: { $0.col_ndx == Column.date.rawValue } ),
+           arg.op_str == "=" {
+            indexInfo.estimatedRows = 1
+            indexInfo.idxFlags = SQLITE_INDEX_SCAN_UNIQUE
+        }
+
         indexInfo.idxNum = add(&info)
         return .ok
     }
@@ -54,44 +60,6 @@ final class CalendarModule: BaseTableModule {
         return Cursor(self, filter: filters.last)
     }
 }
-
-
-/*
-extension CalendarModule.Column {
-    var cal_component: Calendar.Component? {
-        switch self {
-            case .day: return .day
-            case .week: return .weekOfYear
-            case .month: return .month
-            case .year: return .year
-            default: return nil
-        }
-    }
-}
-private func cal_comp(from arg: String) -> (Int, Calendar.Component) {
-    switch arg {
-        case "day": return (1, .day)
-        case "week": return (1, .weekOfYear)
-        case "biweek": return (2, .weekOfYear)
-        case "month": return (1, .month)
-        case "year": return (1, .year)
-        default:
-            return (1, .day)
-    }
-}
-
-private func cal_comp_str(_ count: Int, _ cc: Calendar.Component) -> String {
-    switch (count, cc) {
-        case (1, .day): return "day"
-        case (1, .weekOfYear): return "week"
-        case (2, .weekOfYear): return "biweek"
-        case (1, .month): return "month"
-        case (1, .year): return "year"
-        default:
-            return "<cal_comp>"
-    }
-}
-*/
 
 extension DatabaseValue {
     static func integer(for i: Int) -> DatabaseValue {
@@ -106,9 +74,6 @@ extension CalendarModule {
         var start: Date
         var end: Date
         var current: Date?
-                
-//        var stepUnits: Calendar.Component = .day
-//        var stepValue: Int = 1
         var step: Calendar.Frequency = .daily
         var date_fmt: DateFormatter { module.date_fmt }
         
@@ -145,10 +110,6 @@ extension CalendarModule {
         override func next() {
             _rowid += 1
             current = step.nextDate(from: current, in: calendar) ?? current
-//            current = calendar.date(byAdding: stepUnits,
-//                                    value: stepValue,
-//                                    to: current ?? start,
-//                                    wrappingComponents: false)
         }
                 
         override func filter(_ arguments: [DatabaseValue], indexNumber: Int32, indexName: String?) {
@@ -170,6 +131,22 @@ extension CalendarModule {
                     case (.start, let .text(argv)): start  = date_fmt.date(from: argv) ?? start
                     case (.stop,  let .text(argv)): end  = date_fmt.date(from: argv) ?? end
                     case (.step,  let .text(argv)): step = Calendar.Frequency.named(argv) ?? step
+                        
+                    case (.date,  let .text(argv)):
+                        guard let date = date_fmt.date(from: argv)  else { continue }
+                        switch farg.op_str {
+                            case "=":
+                                start = date
+                                end = date
+                                current = date
+                            case "<", "<=":
+                                end = date
+                            case ">", ">=":
+                                start = date
+                            default:
+                                break
+                        }
+
                     default:
                         break
                 }

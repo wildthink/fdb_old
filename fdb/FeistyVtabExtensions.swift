@@ -200,7 +200,8 @@ public extension FilterInfo {
             argv.append(farg)
             // Outputs
             indexInfo.aConstraintUsage[i].argvIndex = argc
-            indexInfo.aConstraintUsage[i].omit = 1
+            // NOTE: Consider omit = 1 if column is HIDDEN
+            // indexInfo.aConstraintUsage[i].omit = 1
             argc += 1
         }
         
