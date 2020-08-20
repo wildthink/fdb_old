@@ -10,108 +10,64 @@ import CSQLite
 import FeistyDB
 import FeistyExtensions
 
-final class CalendarModule: VirtualTableModule {
+final class CalendarModule: BaseTableModule {
     
-    var filter_info: FilterInfo = FilterInfo()
-    
-    enum Column: Int32, Comparable {
-        static func < (lhs: CalendarModule.Column, rhs: CalendarModule.Column) -> Bool {
-            lhs.rawValue < rhs.rawValue
-        }
-        // CREATE TABLE x(date, weekday, day, week, month, year, start HIDDEN, stop HIDDEN, step HIDDEN)
+    enum Column: Int32, ColumnIndex {
         case date, weekday, day, week, month, year, start, stop, step
-        var is_hidden: Bool { return self >= .start }
     }
-    struct FilterInfo {
-        var argv: [FilterArg] = []
-        var isDescending: Bool = false
-        
-        func contains(_ col: Column) -> Bool {
-            argv.contains(where: { $0.col_ndx == col} )
-        }
+    override var declaration: String {
+        "CREATE TABLE x(date, weekday, day, week, month, year, start HIDDEN, stop HIDDEN, step HIDDEN)"
     }
-    
-    struct FilterArg {
-        var arg_ndx: Int32
-        var col_ndx: Column
-        var op: UInt8
-    }
-    
+
     var date_fmt: DateFormatter
-    
-    func destroy() throws {
-    }
-    
-    convenience init(database: Database, arguments: [String]) throws {
-        try self.init(database: database, arguments: arguments, create: false)
-    }
     
     required init(database: Database, arguments: [String], create: Bool) throws {
         Swift.print (#function, arguments)
         date_fmt = DateFormatter()
         date_fmt.dateFormat = "yyyy-MM-dd"
-    }
-
-    var declaration: String {
-        "CREATE TABLE x(date, weekday, day, week, month, year, start HIDDEN, stop HIDDEN, step HIDDEN)"
-    }
-
-    var options: Database.VirtualTableModuleOptions {
-        return [.innocuous]
+        try super.init(database: database, arguments: arguments, create: create)
     }
     
-    func bestIndex(_ indexInfo: inout sqlite3_index_info) -> VirtualTableModuleBestIndexResult {
-        filter_info = FilterInfo()
+    required public init(database: Database, arguments: [String]) throws {
+        Swift.print (#function, arguments)
+        date_fmt = DateFormatter()
+        date_fmt.dateFormat = "yyyy-MM-dd"
+        try super.init(database: database, arguments: arguments, create: false)
+    }
+    
+    override func bestIndex(_ indexInfo: inout sqlite3_index_info) -> VirtualTableModuleBestIndexResult {
         
-        // Inputs
-        let constraintCount = Int(indexInfo.nConstraint)
-        let constraints = UnsafeBufferPointer<sqlite3_index_constraint>(start: indexInfo.aConstraint, count: constraintCount)
-        
-        // Outputs
-        //        let constraintUsage = UnsafeMutableBufferPointer<sqlite3_index_constraint_usage>(start: indexInfo.aConstraintUsage, count: constraintCount)
-        
-        var argc: Int32 = 1
-        
-        for i in 0 ..< constraintCount {
-            let constraint = constraints[i]
-            guard constraint.usable != 0 else { continue }
-            guard let cndx = Column(rawValue: constraint.iColumn) else { return .constraint }
-            guard cndx.is_hidden else { continue }
-            guard constraint.op == SQLITE_INDEX_CONSTRAINT_EQ else { return .constraint }
-            
-            let farg = FilterArg(arg_ndx: argc - 1, col_ndx: cndx, op: constraint.op)
-            filter_info.argv.append(farg)
-            indexInfo.aConstraintUsage[i].argvIndex = argc
-            indexInfo.aConstraintUsage[i].omit = 1
-            argc += 1
-        }
-        
-        let orderByCount = Int(indexInfo.nOrderBy)
-        let orderBy = UnsafeBufferPointer<sqlite3_index_orderby>(start: indexInfo.aOrderBy, count: orderByCount)
-        
-        if orderByCount == 1 {
-            if orderBy[0].desc == 1 {
-                filter_info.isDescending = true
-            }
-            indexInfo.orderByConsumed = 1
-        }
-        
-        if filter_info.contains(.start) && filter_info.contains(.stop) {
-            indexInfo.estimatedCost = 2  - (filter_info.contains(.step) ? 1 : 0)
+        guard var info = FilterInfo(&indexInfo) else { return .constraint }
+        if info.contains(.start) && info.contains(.stop) {
+            indexInfo.estimatedCost = 2  - (info.contains(.step) ? 1 : 0)
             indexInfo.estimatedRows = 1000
         }
         else {
             indexInfo.estimatedRows = 2147483647
         }
-        //        indexInfo.idxNum = queryPlan.rawValue
+        
+        indexInfo.idxNum = add(&info)
         return .ok
     }
-    
-    func openCursor() -> VirtualTableCursor {
-        return Cursor(self)
+
+    override func openCursor() -> VirtualTableCursor {
+        return Cursor(self, filter: filters.last)
     }
 }
 
+
+/*
+extension CalendarModule.Column {
+    var cal_component: Calendar.Component? {
+        switch self {
+            case .day: return .day
+            case .week: return .weekOfYear
+            case .month: return .month
+            case .year: return .year
+            default: return nil
+        }
+    }
+}
 private func cal_comp(from arg: String) -> (Int, Calendar.Component) {
     switch arg {
         case "day": return (1, .day)
@@ -135,95 +91,95 @@ private func cal_comp_str(_ count: Int, _ cc: Calendar.Component) -> String {
             return "<cal_comp>"
     }
 }
+*/
+
+extension DatabaseValue {
+    static func integer(for i: Int) -> DatabaseValue {
+        DatabaseValue.integer(Int64(i))
+    }
+}
 
 extension CalendarModule {
-    final class Cursor: VirtualTableCursor {
+    final class Cursor: BaseTableModule.Cursor<CalendarModule> {
         
-        let table: CalendarModule
         var calendar: Calendar
         var start: Date
         var end: Date
         var current: Date?
+                
+//        var stepUnits: Calendar.Component = .day
+//        var stepValue: Int = 1
+        var step: Calendar.Frequency = .daily
+        var date_fmt: DateFormatter { module.date_fmt }
         
-        var _rowid: Int64 = 0
-        
-        var stepUnits: Calendar.Component = .day
-        var stepValue: Int = 1
-        var date_fmt: DateFormatter { table.date_fmt }
-        
-        public init(_ table: CalendarModule)
+        public override init(_ table: CalendarModule, filter: FilterInfo?)
         {
-            self.table = table
-
             self.calendar = Calendar.current
             self.start = Date()
             self.end = .distantFuture
-            self._rowid = 0
             self.current = start
+            super.init(table, filter: filter)
         }
 
-        func column(_ index: Int32) -> DatabaseValue {
+        override func column(_ index: Int32) -> DatabaseValue {
             // "CREATE TABLE x(date, weekday, day, week, month, year, start, stop, step)"
-
+            func dbvalue(_ date: Date, _ comp: Calendar.Component) -> DatabaseValue {
+                .integer(Int64(calendar.component(comp, from: date)))
+            }
             guard let date = current, let col = Column(rawValue: index) else { return .null }
             switch col {
-                case .date:
-                    return .text(date_fmt.string(from: date))
-                case .weekday:
-                    return .integer(Int64(calendar.component(.weekday, from: date)))
-                case .day:
-                    return .integer(Int64(calendar.component(.day, from: date)))
-                case .week:
-                    return .integer(Int64(calendar.component(.weekOfYear, from: date)))
-                case .month:
-                    return .integer(Int64(calendar.component(.month, from: date)))
-                case .year:
-                    return .integer(Int64(calendar.component(.year, from: date)))
+                case .date:     return .text(date_fmt.string(from: date))
+                case .weekday:  return dbvalue(date, .weekday)
+                case .day:      return dbvalue(date, .day)
+                case .week:     return dbvalue(date, .weekOfYear)
+                case .month:    return dbvalue(date, .month)
+                case .year:     return dbvalue(date, .year)
                     
                 //  HIDDEN
-                case .start:
-                    return .text(date_fmt.string(from: start))
-                case .stop:
-                    return .text(date_fmt.string(from: end))
-                case .step:
-                    return .text("\(cal_comp_str(stepValue, stepUnits))")
+                case .start:    return .text(date_fmt.string(from: start))
+                case .stop:     return .text(date_fmt.string(from: end))
+                case .step:     return .text(step.name)
              }
         }
         
-        func next() {
+        override func next() {
             _rowid += 1
-            current = calendar.date(byAdding: stepUnits,
-                                    value: stepValue,
-                                    to: current ?? start,
-                                    wrappingComponents: false)
+            current = step.nextDate(from: current, in: calendar) ?? current
+//            current = calendar.date(byAdding: stepUnits,
+//                                    value: stepValue,
+//                                    to: current ?? start,
+//                                    wrappingComponents: false)
         }
-        
-        func rowid() -> Int64 {
-            _rowid
-        }
-        
-        func filter(_ arguments: [DatabaseValue], indexNumber: Int32, indexName: String?) {
+                
+        override func filter(_ arguments: [DatabaseValue], indexNumber: Int32, indexName: String?) {
+            defer { module.clearFilters() }
+            guard let filterInfo = filterInfo ?? module.filters[Int(indexNumber)]
+            else { return }
             _rowid = 1
             start = Date()
             end = .distantFuture
-            stepValue = 1
+            step = .daily
             
-            for farg in table.filter_info.argv {
-                //                Swift.print(farg)
-                switch (farg.col_ndx, arguments[Int(farg.arg_ndx)]) {
-                    case (.start, let DatabaseValue.text(argv)): start  = date_fmt.date(from: argv) ?? start
-                    case (.stop,  let DatabaseValue.text(argv)): end  = date_fmt.date(from: argv) ?? end
-                    case (.step,  let DatabaseValue.text(argv)): (stepValue, stepUnits) = cal_comp(from: argv)
+            // DEBUG
+            Swift.print(
+                filterInfo.describe(with: Column.allCases.map {String(describing:$0)},
+                                    values: arguments))
+
+            for farg in filterInfo.argv {
+                switch (Column(rawValue: farg.col_ndx), arguments[Int(farg.arg_ndx)]) {
+                    case (.start, let .text(argv)): start  = date_fmt.date(from: argv) ?? start
+                    case (.stop,  let .text(argv)): end  = date_fmt.date(from: argv) ?? end
+                    case (.step,  let .text(argv)): step = Calendar.Frequency.named(argv) ?? step
                     default:
                         break
                 }
             }
-            current = table.filter_info.isDescending ? end : start
+            current = filterInfo.isDescending ? end : start
         }
         
-        var eof: Bool {
-            // HARD LIMIT of total days for 1000 year span is 365_000
-            if let date = current, date > end || _rowid > 365_000 {
+        override var eof: Bool {
+            // HARD LIMIT of total days for 100 year span is 36_500
+            if let date = current, date > end || _rowid > 36_500 {
                 return true
             }
             return false

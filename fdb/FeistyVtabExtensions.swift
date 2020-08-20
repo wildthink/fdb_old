@@ -9,9 +9,107 @@ import Foundation
 import CSQLite
 import FeistyDB
 
-public protocol ColumnIndex {
+public protocol ColumnIndex: CaseIterable {
     var rawValue: Int32 { get }
+    var name: String { get }
+    init? (name: String)
 }
+
+public extension ColumnIndex {
+    var name: String { return "\(self)" }
+    init? (name: String) {
+        for c in Self.allCases where name == c.name {
+            self = c
+            return
+        }
+        return nil
+    }
+}
+
+open class BaseTableModule: VirtualTableModule {
+    
+    public enum Column: Int32, ColumnIndex {
+        case value, start, stop, step
+    }
+    public var filters: [FilterInfo] = []
+    
+    public required init(database: Database, arguments: [String], create: Bool) throws {
+        Swift.print (#function, arguments)
+    }
+    
+    public required init(database: Database, arguments: [String]) throws {
+        Swift.print (#function, arguments)
+    }
+    
+    open func add(_ filter: inout FilterInfo) -> Int32 {
+        filter.key = Int32(filters.count)
+        filters.append(filter)
+        return filter.key
+    }
+    open func clearFilters() {
+        filters.removeAll()
+    }
+    
+    open var declaration: String {
+        "CREATE TABLE x(value)"
+    }
+    
+    open var options: Database.VirtualTableModuleOptions {
+        return [.innocuous]
+    }
+    
+    open func bestIndex(_ indexInfo: inout sqlite3_index_info) -> VirtualTableModuleBestIndexResult {
+        
+        guard var info = FilterInfo(&indexInfo) else { return .constraint }
+        if info.contains(.start) && info.contains(.stop) {
+            indexInfo.estimatedCost = 2  - (info.contains(.step) ? 1 : 0)
+            indexInfo.estimatedRows = 1000
+        }
+        else {
+            indexInfo.estimatedRows = 2147483647
+        }
+        
+        indexInfo.idxNum = add(&info)
+        return .ok
+    }
+    
+    open func openCursor() -> VirtualTableCursor {
+        return Cursor(self, filter: filters.last)
+    }
+}
+
+extension BaseTableModule {
+    open class Cursor<M: BaseTableModule>: VirtualTableCursor {
+        
+        public let module: M
+        let filterInfo: FilterInfo?
+        public var _rowid: Int64 = 0
+        open var eof: Bool { true }
+
+        var isDescending: Bool { filterInfo?.isDescending ?? false }
+        
+        init(_ module: M, filter: FilterInfo?) {
+            self.module = module
+            self.filterInfo = filter
+        }
+
+        open func column(_ index: Int32) throws -> DatabaseValue {
+            .null
+        }
+        
+        open func next() throws {
+            _rowid += 1
+        }
+        
+        open func rowid() throws -> Int64 {
+            _rowid
+        }
+        
+        open func filter(_ arguments: [DatabaseValue], indexNumber: Int32, indexName: String?) throws {
+        }
+    }
+}
+
 
 public struct FilterInfo {
     public var key: Int32 = 0
@@ -46,7 +144,7 @@ public struct FilterArg: CustomStringConvertible {
         self.op = op
     }
     
-    init(arg: Int32, col: ColumnIndex, op: UInt8) {
+    init<C: ColumnIndex>(arg: Int32, col: C, op: UInt8) {
         self.init(arg: arg, col: col.rawValue, op: op)
     }
 
